@@ -19,8 +19,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
+import androidx.room.Room
 import com.example.recipelogger.databinding.FragmentRecipeBinding
+import com.example.recipelogger.model.Recipe
+import com.example.recipelogger.roomdb.RecipeDAO
+import com.example.recipelogger.roomdb.RecipeDatabase
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.io.ByteArrayOutputStream
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
@@ -29,11 +38,21 @@ class RecipeFragment : Fragment() {
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private var selectedImage: Uri? = null
     private var selectedBitmap: Bitmap? = null
+    private val mDisposable = CompositeDisposable()
+    private lateinit var db: RecipeDatabase
+    private lateinit var recipeDao: RecipeDAO
+    private fun handleResponseForInster() {
+        val action = RecipeFragmentDirections.actionRecipeFragmentToListFragment()
+        Navigation.findNavController(requireView()).navigate(action)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLauncher()
+        db= Room.databaseBuilder(requireContext(), RecipeDatabase::class.java,"Recipes")
+            .build()
+        recipeDao=db.recipeDao()
     }
 
     override fun onCreateView(
@@ -118,7 +137,24 @@ class RecipeFragment : Fragment() {
                 }
             }
         }
-        binding.saveButton.setOnClickListener {  }
+        binding.saveButton.setOnClickListener {
+            val mealName = binding.mealNameText.text.toString()
+            val ingredient = binding.ingredientText.text.toString()
+
+            if (selectedBitmap != null) {
+                val smallBitmap = smallBitmapCreate(selectedBitmap!!, 300)
+                val outputStream = ByteArrayOutputStream()
+                smallBitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
+                val byteArray = outputStream.toByteArray()
+                val recipe = Recipe(mealName, ingredient, byteArray)
+                mDisposable.add(
+                    recipeDao.insert(recipe)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::handleResponseForInster)
+                )
+            }
+        }
 
 
 
@@ -178,6 +214,21 @@ class RecipeFragment : Fragment() {
                     Toast.makeText(requireContext(), "İzin verilmedi!", Toast.LENGTH_LONG).show()
                 }
             }
+    }
+    private fun smallBitmapCreate(userSelectedBitmap: Bitmap, maximumSize: Int): Bitmap {
+        var width = userSelectedBitmap.width
+        var height = userSelectedBitmap.height
+        val bitmapRate: Double = width.toDouble() / height.toDouble()
+        if (bitmapRate > 1) {
+            width = maximumSize
+            val shortenedHeight = width / bitmapRate
+            height = shortenedHeight.toInt()
+        } else {
+            height = maximumSize
+            val shortenedWidth = height * bitmapRate
+            width = shortenedWidth.toInt()
+        }
+        return Bitmap.createScaledBitmap(userSelectedBitmap, width, height, true)
     }
 
 
