@@ -162,7 +162,19 @@ class RecipeFragment : Fragment() {
 
 
 
-        binding.deleteButton.setOnClickListener {  }
+        binding.deleteButton.setOnClickListener {
+            if (selectedRecipe != null) {
+                mDisposable.add(
+                    recipeDao.delete(recipe = selectedRecipe!!)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::handleResponseForInster)
+
+                )
+
+            }
+            mDisposable
+        }
 
 
         arguments?.let {
