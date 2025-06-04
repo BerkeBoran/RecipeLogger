@@ -1,4 +1,4 @@
-package com.example.recipelogger
+package com.example.recipelogger.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
