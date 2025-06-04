@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -41,6 +42,8 @@ class RecipeFragment : Fragment() {
     private val mDisposable = CompositeDisposable()
     private lateinit var db: RecipeDatabase
     private lateinit var recipeDao: RecipeDAO
+    private var selectedRecipe: Recipe? = null
+
     private fun handleResponseForInster() {
         val action = RecipeFragmentDirections.actionRecipeFragmentToListFragment()
         Navigation.findNavController(requireView()).navigate(action)
@@ -171,6 +174,13 @@ class RecipeFragment : Fragment() {
                 binding.deleteButton.isEnabled = true
                 binding.saveButton.isEnabled = false
             }
+            val id = RecipeFragmentArgs.fromBundle(it).id
+
+            mDisposable.add(
+                recipeDao.funById(id).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(this::handleResponse)
+            )
+
 
         }
     }
@@ -229,6 +239,15 @@ class RecipeFragment : Fragment() {
             width = shortenedWidth.toInt()
         }
         return Bitmap.createScaledBitmap(userSelectedBitmap, width, height, true)
+    }
+    private fun handleResponse(recipe: Recipe) {
+        binding.mealNameText.setText(recipe.name)
+        binding.ingredientText.setText(recipe.ingredient)
+        val bitmap = BitmapFactory.decodeByteArray(recipe.image, 0, recipe.image.size)
+        binding.imageView.setImageBitmap(bitmap)
+        selectedRecipe = recipe
+
+
     }
 
 
