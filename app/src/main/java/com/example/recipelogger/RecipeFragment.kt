@@ -32,7 +32,21 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.imageView.setOnClickListener {  }
+        binding.saveButton.setOnClickListener {  }
+        binding.deleteButton.setOnClickListener {  }
+        arguments?.let {
+            val information = RecipeFragmentArgs.fromBundle(it).information
+            if (information == "new") {
+                binding.deleteButton.isEnabled = false
+                binding.saveButton.isEnabled = true
+            } else {
+                binding.deleteButton.isEnabled = true
+                binding.saveButton.isEnabled = false
+            }
 
-
-
+        }
+    }
 }
