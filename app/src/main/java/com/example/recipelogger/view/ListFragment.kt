@@ -24,13 +24,12 @@ class ListFragment : Fragment() {
     private lateinit var recipeDao: RecipeDAO
     private val mDisposable = CompositeDisposable()
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), RecipeDatabase::class.java,"Recipes").fallbackToDestructiveMigration().build()
+        db = Room.databaseBuilder(requireContext(), RecipeDatabase::class.java, "Recipes")
+            .fallbackToDestructiveMigration().build()
 
-        recipeDao=db.recipeDao()
+        recipeDao = db.recipeDao()
     }
 
     override fun onCreateView(
@@ -41,6 +40,7 @@ class ListFragment : Fragment() {
         val view = binding.root
         return view
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -50,13 +50,17 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getData()
         binding.floatingActionButton.setOnClickListener {
-            val action= ListFragmentDirections.actionListFragmentToRecipeFragment(information = "new", id = 0)
+            val action = ListFragmentDirections.actionListFragmentToRecipeFragment(
+                information = "new",
+                id = 0
+            )
             Navigation.findNavController(view).navigate(action)
         }
         binding.recipeRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
     }
+
     private fun getData() {
         mDisposable.add(
             recipeDao.getAll()

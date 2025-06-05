@@ -12,12 +12,13 @@ import io.reactivex.rxjava3.core.Flowable
 interface RecipeDAO {
     @Query("SELECT * FROM Recipe")
     fun getAll(): Flowable<List<Recipe>>
+
     @Query("SELECT * FROM Recipe WHERE id=:id")
-    fun funById(id :Int): Flowable<Recipe>
+    fun funById(id: Int): Flowable<Recipe>
 
     @Insert
-    fun insert(recipe: Recipe) : Completable
+    fun insert(recipe: Recipe): Completable
 
     @Delete
-    fun delete(recipe: Recipe) : Completable
+    fun delete(recipe: Recipe): Completable
 }

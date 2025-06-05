@@ -49,13 +49,12 @@ class RecipeFragment : Fragment() {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLauncher()
-        db= Room.databaseBuilder(requireContext(), RecipeDatabase::class.java,"Recipes")
+        db = Room.databaseBuilder(requireContext(), RecipeDatabase::class.java, "Recipes")
             .build()
-        recipeDao=db.recipeDao()
+        recipeDao = db.recipeDao()
     }
 
     override fun onCreateView(
@@ -66,6 +65,7 @@ class RecipeFragment : Fragment() {
         val view = binding.root
         return view
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -143,14 +143,14 @@ class RecipeFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             val mealName = binding.mealNameText.text.toString()
             val ingredient = binding.ingredientText.text.toString()
-            val recipeInstruction=binding.recipeInstructionsText.text.toString()
+            val recipeInstruction = binding.recipeInstructionsText.text.toString()
 
             if (selectedBitmap != null) {
                 val smallBitmap = smallBitmapCreate(selectedBitmap!!, 300)
                 val outputStream = ByteArrayOutputStream()
                 smallBitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
                 val byteArray = outputStream.toByteArray()
-                val recipe = Recipe(mealName, ingredient, byteArray,recipeInstruction)
+                val recipe = Recipe(mealName, ingredient, byteArray, recipeInstruction)
                 mDisposable.add(
                     recipeDao.insert(recipe)
                         .subscribeOn(Schedulers.io())
@@ -194,9 +194,9 @@ class RecipeFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(this::handleResponse)
             )
 
-
         }
     }
+
     private fun registerLauncher() {
         activityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -238,6 +238,7 @@ class RecipeFragment : Fragment() {
                 }
             }
     }
+
     private fun smallBitmapCreate(userSelectedBitmap: Bitmap, maximumSize: Int): Bitmap {
         var width = userSelectedBitmap.width
         var height = userSelectedBitmap.height
@@ -253,6 +254,7 @@ class RecipeFragment : Fragment() {
         }
         return Bitmap.createScaledBitmap(userSelectedBitmap, width, height, true)
     }
+
     private fun handleResponse(recipe: Recipe) {
         binding.mealNameText.setText(recipe.name)
         binding.ingredientText.setText(recipe.ingredient)

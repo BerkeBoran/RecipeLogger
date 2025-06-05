@@ -7,17 +7,17 @@ import androidx.room.PrimaryKey
 @Entity
 data class Recipe(
 
-    @ColumnInfo(name="name")
-    var name:String,
-    @ColumnInfo(name="ingredient")
+    @ColumnInfo(name = "name")
+    var name: String,
+    @ColumnInfo(name = "ingredient")
     var ingredient: String,
 
-    @ColumnInfo(name="image")
+    @ColumnInfo(name = "image")
     var image: ByteArray,
     @ColumnInfo(name = "instruction")
     var instruction: String,
 
-){
+    ) {
     @PrimaryKey(autoGenerate = true)
-    var id=0
+    var id = 0
 }
