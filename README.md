@@ -34,7 +34,7 @@ git clone https://github.com/BerkeBoran/RecipeLogger.git
 
 Open in Android Studio and run.
 
-##Project Details
+## Project Details
 Image Selection and Permissions:
 Runtime permissions are requested dynamically — READ_MEDIA_IMAGES for Android 13+ and READ_EXTERNAL_STORAGE for lower versions, with user-friendly explanations via Snackbars.
 
@@ -53,5 +53,5 @@ Room database is used for persistent storage of recipe data.
 Navigation:
 Navigation Component handles transitions between recipe list and recipe detail screens.
 
-##Contact & Support
+## Contact & Support
 If you want to give any feedback, please contact me at sberkeborans@gmail.com
