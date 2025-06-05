@@ -1,5 +1,5 @@
 package com.example.recipelogger.view
-
+import com.example.recipelogger.R
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -87,10 +87,10 @@ class RecipeFragment : Fragment() {
                     ) {
                         Snackbar.make(
                             view,
-                            "Galireye ulaşıp görsel seçmemiz lazım!",
+                            getString(R.string.gallery_permission_explanation),
                             Snackbar.LENGTH_INDEFINITE
                         ).setAction(
-                            "İzin ver", View.OnClickListener {
+                            R.string.allow, View.OnClickListener {
                                 permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
 
                             }
@@ -120,10 +120,10 @@ class RecipeFragment : Fragment() {
                     ) {
                         Snackbar.make(
                             view,
-                            "Galireye ulaşıp görsel seçmemiz lazım!",
+                            R.string.gallery_permission_explanation,
                             Snackbar.LENGTH_INDEFINITE
                         ).setAction(
-                            "İzin ver", View.OnClickListener {
+                            R.string.allow, View.OnClickListener {
                                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
 
                             }
@@ -234,7 +234,7 @@ class RecipeFragment : Fragment() {
                         Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     activityResultLauncher.launch(intentToGallery)
                 } else {
-                    Toast.makeText(requireContext(), "İzin verilmedi!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_LONG).show()
                 }
             }
     }
