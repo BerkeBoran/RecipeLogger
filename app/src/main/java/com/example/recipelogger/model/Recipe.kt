@@ -13,7 +13,9 @@ data class Recipe(
     var ingredient: String,
 
     @ColumnInfo(name="image")
-    var image: ByteArray
+    var image: ByteArray,
+    @ColumnInfo(name = "instruction")
+    var instruction: String,
 
 ){
     @PrimaryKey(autoGenerate = true)

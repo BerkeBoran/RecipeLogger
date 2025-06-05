@@ -28,7 +28,8 @@ class ListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), RecipeDatabase::class.java,"Recipes").build()
+        db= Room.databaseBuilder(requireContext(), RecipeDatabase::class.java,"Recipes").fallbackToDestructiveMigration().build()
+
         recipeDao=db.recipeDao()
     }
 

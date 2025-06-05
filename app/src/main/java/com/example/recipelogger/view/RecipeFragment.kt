@@ -143,13 +143,14 @@ class RecipeFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             val mealName = binding.mealNameText.text.toString()
             val ingredient = binding.ingredientText.text.toString()
+            val recipeInstruction=binding.recipeInstructionsText.text.toString()
 
             if (selectedBitmap != null) {
                 val smallBitmap = smallBitmapCreate(selectedBitmap!!, 300)
                 val outputStream = ByteArrayOutputStream()
                 smallBitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
                 val byteArray = outputStream.toByteArray()
-                val recipe = Recipe(mealName, ingredient, byteArray)
+                val recipe = Recipe(mealName, ingredient, byteArray,recipeInstruction)
                 mDisposable.add(
                     recipeDao.insert(recipe)
                         .subscribeOn(Schedulers.io())
@@ -255,6 +256,7 @@ class RecipeFragment : Fragment() {
     private fun handleResponse(recipe: Recipe) {
         binding.mealNameText.setText(recipe.name)
         binding.ingredientText.setText(recipe.ingredient)
+        binding.recipeInstructionsText.setText(recipe.instruction)
         val bitmap = BitmapFactory.decodeByteArray(recipe.image, 0, recipe.image.size)
         binding.imageView.setImageBitmap(bitmap)
         selectedRecipe = recipe
